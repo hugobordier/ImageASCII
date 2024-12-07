@@ -11,44 +11,37 @@ def resize_image(image, new_width=100):
     return resized_image
 
 def getRGB(rgb):
-    
     r, g, b = rgb
-    
-    # Calcul de la luminance (luminosité perçue)
-    luminance = (0.2989 * r + 0.5870 * g + 0.1140 * b)
+    luminance = 0.2989 * r + 0.5870 * g + 0.1140 * b
 
-    # Si la couleur est sombre (luminance faible)
-    if luminance < 128:
+    if luminance < 150:
         if r > g and r > b:
-            return bcolors.RED  # Rouge sombre
+            return bcolors.LIGHT_YELLOW
         elif g > r and g > b:
-            return bcolors.GREEN  # Vert sombre
+            return bcolors.GREEN
         elif b > r and b > g:
-            return bcolors.BLUE  # Bleu sombre
-        elif r == g == b:  # Gris foncé (proche du noir)
-            return bcolors.BLACK  # Noir foncé
+            return bcolors.BLUE
+        elif abs(r - g) < 10 and abs(g - b) < 10:
+            return bcolors.BLACK
         else:
-            return bcolors.MAGENTA  # Magenta foncé pour des cas intermédiaires
+            return bcolors.MAGENTA
+    elif luminance < 230:
+        if r > 200 and g > 200 and b < 100:
+            return bcolors.YELLOW
+        elif g > 200 and b > 200 and r < 100:
+            return bcolors.CYAN
+        elif b > 200 and r > 200 and g < 100:
+            return bcolors.MAGENTA
+        elif r > g and r > b:
+            return bcolors.LIGHT_RED
+        elif g > r and g > b:
+            return bcolors.LIGHT_GREEN
+        elif b > r and b > g:
+            return bcolors.LIGHT_BLUE
+        elif abs(r - g) < 10 and abs(g - b) < 10:
+            return bcolors.LIGHT_WHITE
+    return bcolors.WHITE
 
-    # Si la couleur est claire (luminance élevée)
-    elif luminance < 240:
-        if r > g and r > b:
-            return bcolors.LIGHT_RED  # Rouge clair
-        elif g > r and g > b:
-            return bcolors.LIGHT_GREEN  # Vert clair
-        elif b > r and b > g:
-            return bcolors.LIGHT_BLUE  # Bleu clair
-        elif r == g and g == b:  # Gris clair (proche du blanc)
-            return bcolors.LIGHT_WHITE  # Blanc
-        elif r > b and r > g:
-            return bcolors.YELLOW  # Jaune clair
-        elif g > b and g > r:
-            return bcolors.CYAN  # Cyan clair
-        elif b > r and b > g:
-            return bcolors.MAGENTA  # Magenta clair
-        else:
-            return bcolors.LIGHT_WHITE  # Cas par défaut (blanc)
-    return bcolors.WHITE  # Par défaut
 
 
 
@@ -97,12 +90,12 @@ def print_ascii_image(ascii_str):
 
 def main():
     image_path = input("Entrez le chemin de l'image à convertir : ")
-    new_width = int(input("Entrez la largeur souhaitée pour l'image ASCII (par défaut 100) : ") or 100)
+    # new_width = int(input("Entrez la largeur souhaitée pour l'image ASCII (par défaut 100) : ") or 100)
 
-    use_color = input("Voulez-vous afficher l'image en couleur (y/n) ? ").lower() == 'y'
+    # use_color = input("Voulez-vous afficher l'image en couleur (y/n) ? ").lower() == 'y'
 
-    ascii_image = image_to_ascii(image_path, new_width, use_color)
-    # print("\033[0;95mtest")
+    ascii_image = image_to_ascii(image_path, 500, False)
+    # print("\033[0;33mtest")
     print_ascii_image(ascii_image)
 
 if __name__ == "__main__":
