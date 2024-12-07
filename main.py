@@ -53,7 +53,6 @@ def getRGB(rgb):
 
 
 def grayscale_image(image):
-    print(image.convert("L"))
     return image.convert("L")
 
 def pixel_to_ascii(pixel_value, use_color=False):
@@ -81,19 +80,13 @@ def image_to_ascii(image_path, new_width=100, use_color=False):
     ascii_str = ""
     color_str = ""
 
-    for pixel_value in list(imageRGB.getdata()):
-        color_str += getRGB(pixel_value)
-
-    for pixel_value in list(image.getdata()):
-        ascii_str += pixel_to_ascii(pixel_value, use_color)
+    color_str = [getRGB(pixel_value) for pixel_value in list(imageRGB.getdata())]
+    ascii_str = [pixel_to_ascii(pixel_value, use_color) for pixel_value in list(image.getdata())]
 
     img_width = image.width
     ascii_str_len = len(ascii_str)
-    print(type(ascii_str))
     ascii_str = [x + y for x, y in zip(color_str,ascii_str)]
-    ascii_str = "".join(ascii_str)
-    ascii_str = [ascii_str[index:index+img_width] for index in range(0, ascii_str_len, img_width )]
-    print(type(ascii_str))
+    ascii_str = ["".join(ascii_str[index:index + img_width]) for index in range(0, ascii_str_len, img_width)]
 
     ascii_str = "\n".join(ascii_str)
     
@@ -109,7 +102,7 @@ def main():
     use_color = input("Voulez-vous afficher l'image en couleur (y/n) ? ").lower() == 'y'
 
     ascii_image = image_to_ascii(image_path, new_width, use_color)
-    print("\033[0;95mtest")
+    # print("\033[0;95mtest")
     print_ascii_image(ascii_image)
 
 if __name__ == "__main__":
