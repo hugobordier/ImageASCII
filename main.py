@@ -16,7 +16,7 @@ def getRGB(rgb):
 
     if luminance < 150:
         if r > g and r > b:
-            return bcolors.LIGHT_YELLOW
+            return bcolors.YELLOW
         elif g > r and g > b:
             return bcolors.GREEN
         elif b > r and b > g:
@@ -27,7 +27,7 @@ def getRGB(rgb):
             return bcolors.MAGENTA
     elif luminance < 230:
         if r > 200 and g > 200 and b < 100:
-            return bcolors.YELLOW
+            return bcolors.LIGHT_YELLOW
         elif g > 200 and b > 200 and r < 100:
             return bcolors.CYAN
         elif b > 200 and r > 200 and g < 100:
@@ -52,12 +52,8 @@ def pixel_to_ascii(pixel_value, use_color=False):
     color_index = pixel_value // 25  # 255 / len(ASCII_CHARS) = 25
     ascii_char = ASCII_CHARS[color_index]
 
-    if use_color:
-        text_color = bcolors.RED if color_index % 2 == 0 else bcolors.GREEN
-        
-        return f"{text_color}{ascii_char}{bcolors.RESET}"
-    else:
-        return ascii_char
+    
+    return ascii_char
 
 def image_to_ascii(image_path, new_width=100, use_color=False):
     try:
@@ -73,12 +69,14 @@ def image_to_ascii(image_path, new_width=100, use_color=False):
     ascii_str = ""
     color_str = ""
 
-    color_str = [getRGB(pixel_value) for pixel_value in list(imageRGB.getdata())]
+    if use_color:
+        color_str = [getRGB(pixel_value) for pixel_value in list(imageRGB.getdata())]
     ascii_str = [pixel_to_ascii(pixel_value, use_color) for pixel_value in list(image.getdata())]
 
     img_width = image.width
     ascii_str_len = len(ascii_str)
-    ascii_str = [x + y for x, y in zip(color_str,ascii_str)]
+    if use_color:
+        ascii_str = [x + y for x, y in zip(color_str,ascii_str)]
     ascii_str = ["".join(ascii_str[index:index + img_width]) for index in range(0, ascii_str_len, img_width)]
 
     ascii_str = "\n".join(ascii_str)
@@ -90,12 +88,11 @@ def print_ascii_image(ascii_str):
 
 def main():
     image_path = input("Entrez le chemin de l'image à convertir : ")
-    # new_width = int(input("Entrez la largeur souhaitée pour l'image ASCII (par défaut 100) : ") or 100)
+    new_width = int(input("Entrez la largeur souhaitée pour l'image ASCII (par défaut 100) : ") or 100)
 
-    # use_color = input("Voulez-vous afficher l'image en couleur (y/n) ? ").lower() == 'y'
+    use_color = input("Voulez-vous afficher l'image en couleur (y/n) ? ").lower() == 'y'
 
-    ascii_image = image_to_ascii(image_path, 500, False)
-    # print("\033[0;33mtest")
+    ascii_image = image_to_ascii(image_path, new_width, use_color)
     print_ascii_image(ascii_image)
 
 if __name__ == "__main__":
