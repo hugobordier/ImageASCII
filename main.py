@@ -87,7 +87,7 @@ def print_ascii_image(ascii_str):
     print(ascii_str)
 
 def main():
-    image_path = input("Entrez le chemin de l'image à convertir : ")
+    image_path = "assets/" + input("Entrez le chemin de l'image à convertir : ")
     new_width = int(input("Entrez la largeur souhaitée pour l'image ASCII (par défaut 100) : ") or 100)
 
     use_color = input("Voulez-vous afficher l'image en couleur (y/n) ? ").lower() == 'y'
